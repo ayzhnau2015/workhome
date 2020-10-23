@@ -21,8 +21,6 @@ public interface DataSource {
 
     /**
      * obtain message list start startindex and length
-     * @param startIndex start position
-     * @param length number of obtain
      * @return message list.
      */
     Observable<List<MessageBean>> getMessageList();

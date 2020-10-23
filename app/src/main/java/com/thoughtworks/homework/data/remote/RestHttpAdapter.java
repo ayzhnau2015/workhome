@@ -27,19 +27,20 @@ public class RestHttpAdapter {
         } else {
             retrofitBuilder = new Retrofit.Builder()
                     .baseUrl(url)
-                    .client(getBuilder().build())
+                    .client(getHttpClient())
                     .addConverterFactory(GsonConverterFactory.create())
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create());
         }
         return retrofitBuilder.build();
     }
 
-    private OkHttpClient.Builder getBuilder(){
+    private OkHttpClient getHttpClient(){
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
         builder.connectTimeout(TIME_OUT_UNIT, TimeUnit.MILLISECONDS)
                 .readTimeout(TIME_OUT_UNIT, TimeUnit.MILLISECONDS)
                 .writeTimeout(TIME_OUT_UNIT, TimeUnit.MILLISECONDS)
+                .retryOnConnectionFailure(true)
                 .addInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.NONE));
-        return builder;
+        return builder.build();
     }
 }

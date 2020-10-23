@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="ImageShowLayout">
+        <attr name="imgLayoutWidth" format="dimension"/>
+        <attr name="imgSingleWidth" format="dimension"/>
+        <attr name="imgMargin" format="dimension"/>
+        <attr name="imgSingleRatio" format="dimension"/>
+    </declare-styleable>
+</resources>
