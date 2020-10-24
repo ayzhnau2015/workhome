@@ -1,5 +1,7 @@
 package com.thoughtworks.homework.model;
 
+import android.text.TextUtils;
+
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
@@ -58,5 +60,23 @@ public class MessageBean {
 
     public void setErrorMsg(String errorMsg) {
         mErrorMsg = errorMsg;
+    }
+
+    /**
+     * 判断是否有效
+     * @return true 有效 false 无效
+     */
+    public boolean isLegal(){
+        return !TextUtils.isEmpty(mContent) || (mImageUrlBeanList != null && mImageUrlBeanList.size() > 0);
+    }
+    @Override
+    public String toString() {
+        return "MessageBean{" +
+                "mContent='" + mContent + '\'' +
+                ", mSenderBean=" + mSenderBean +
+                ", mImageUrlBeanList=" + mImageUrlBeanList +
+                ", mCommentBeanList=" + mCommentBeanList +
+                ", mErrorMsg='" + mErrorMsg + '\'' +
+                '}';
     }
 }

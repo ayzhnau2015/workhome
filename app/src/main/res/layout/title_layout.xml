@@ -7,13 +7,12 @@
     android:orientation="vertical"
     tools:visibility="visible">
 
-    <com.hx.wechatmoment.view.widget.StatusView
+    <com.thoughtworks.homework.widget.StatusView
         android:id="@+id/sv_status"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
-        android:visibility="visible" />
-
+        android:visibility="visible"/>
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/rl_bar_title"
         android:layout_width="match_parent"
@@ -31,7 +30,7 @@
             android:ellipsize="end"
             android:gravity="center"
             android:maxLines="1"
-            android:text="嗨学朋友圈"
+            android:text="@string/title_app"
             android:textColor="#ff272755"
             android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="parent"

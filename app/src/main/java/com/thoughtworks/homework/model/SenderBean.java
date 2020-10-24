@@ -10,11 +10,11 @@ import com.google.gson.annotations.SerializedName;
  */
 public class SenderBean {
     @SerializedName("avatar")
-    private String mAvatar;
+    protected String mAvatar;
     @SerializedName("nick")
-    private String mNick;
+    protected String mNick;
     @SerializedName("username")
-    private String mUserName;
+    protected String mUserName;
 
     public String getAvatar() {
         return mAvatar;
@@ -38,5 +38,14 @@ public class SenderBean {
 
     public void setUserName(String userName) {
         mUserName = userName;
+    }
+
+    @Override
+    public String toString() {
+        return "SenderBean{" +
+                "mAvatar='" + mAvatar + '\'' +
+                ", mNick='" + mNick + '\'' +
+                ", mUserName='" + mUserName + '\'' +
+                '}';
     }
 }

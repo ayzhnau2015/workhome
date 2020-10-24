@@ -19,17 +19,20 @@ import com.thoughtworks.homework.model.SenderBean;
 import java.util.List;
 
 public class LinearCommentLayout extends LinearLayout {
+    private static final int SPAN_COLOR = 0xff387dcc;
+    private static final int SPAN_COLOR_TWO = 0xff686868;
     private List<CommentBean> mCommentBeanList;
     public LinearCommentLayout(Context context) {
-        super(context);
+        this(context,null);
     }
 
     public LinearCommentLayout(Context context, @Nullable AttributeSet attrs) {
-        super(context, attrs);
+        this(context, attrs,0);
     }
 
     public LinearCommentLayout(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        setOrientation(VERTICAL);
     }
 
     public void setCommentBeanList(List<CommentBean> commentBeanList){
@@ -74,7 +77,7 @@ public class LinearCommentLayout extends LinearLayout {
             @Override
             public void updateDrawState(TextPaint ds) {
                 super.updateDrawState(ds);
-                ds.setColor(0xff686868);
+                ds.setColor(SPAN_COLOR_TWO);
                 ds.setUnderlineText(false);
             }
         };
@@ -92,7 +95,7 @@ public class LinearCommentLayout extends LinearLayout {
             @Override
             public void updateDrawState(TextPaint ds) {
                 super.updateDrawState(ds);
-                ds.setColor(0xff387dcc);
+                ds.setColor(SPAN_COLOR);
                 ds.setUnderlineText(false);
             }
         };
@@ -104,7 +107,7 @@ public class LinearCommentLayout extends LinearLayout {
     private TextView getTextView(){
         TextView textView = new TextView(getContext());
         textView.setTextSize(15);
-        textView.setTextColor(0xff686868);
+        textView.setTextColor(SPAN_COLOR_TWO);
         return textView;
     }
 }

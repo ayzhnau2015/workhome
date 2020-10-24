@@ -18,4 +18,14 @@ public class UserBean extends SenderBean{
     public void setProfileImage(String profileImage) {
         mProfileImage = profileImage;
     }
+
+    @Override
+    public String toString() {
+        return "UserBean{" +
+                "mProfileImage='" + mProfileImage + '\'' +
+                ", mAvatar='" + mAvatar + '\'' +
+                ", mNick='" + mNick + '\'' +
+                ", mUserName='" + mUserName + '\'' +
+                '}';
+    }
 }

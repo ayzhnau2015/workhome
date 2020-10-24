@@ -18,4 +18,11 @@ public class ImageUrlBean {
     public void setImageUrl(String imageUrl) {
         mImageUrl = imageUrl;
     }
+
+    @Override
+    public String toString() {
+        return "ImageUrlBean{" +
+                "mImageUrl='" + mImageUrl + '\'' +
+                '}';
+    }
 }

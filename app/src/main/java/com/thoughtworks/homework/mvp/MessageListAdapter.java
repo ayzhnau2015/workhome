@@ -1,7 +1,6 @@
 package com.thoughtworks.homework.mvp;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,9 +14,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.request.transition.Transition;
 import com.thoughtworks.homework.R;
 import com.thoughtworks.homework.model.CommentBean;
 import com.thoughtworks.homework.model.ImageUrlBean;
@@ -25,14 +21,14 @@ import com.thoughtworks.homework.model.MessageBean;
 import com.thoughtworks.homework.model.SenderBean;
 import com.thoughtworks.homework.util.GlideUtil;
 import com.thoughtworks.homework.util.MessageConstants;
-import com.thoughtworks.homework.widget.AbstractImageShowAdapter;
-import com.thoughtworks.homework.widget.ImageShowLayout;
 import com.thoughtworks.homework.widget.LinearCommentLayout;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import cn.bingoogolapple.photopicker.widget.BGANinePhotoLayout;
 
 public class MessageListAdapter extends RecyclerView.Adapter{
     public static final String TAG = "MessageListAdapter";
@@ -53,7 +49,7 @@ public class MessageListAdapter extends RecyclerView.Adapter{
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if (viewType == MESSAGE_VIEW_TYPE) {
-            return new MessageHolder(mLayoutInflater.inflate(R.layout.item_moment, parent, false));
+            return new MessageHolder(mLayoutInflater.inflate(R.layout.item_movement, parent, false));
         } else {
             return new LoadViewHolder(mLayoutInflater.inflate(R.layout.item_recyclerview_footer, parent, false));
         }
@@ -78,57 +74,37 @@ public class MessageListAdapter extends RecyclerView.Adapter{
         }
         List<ImageUrlBean> imageUrlBeanList = messageBean.getImageUrlBeanList();
         List<CommentBean> commentBeanList = messageBean.getCommentBeanList();
-        SenderBean sender = messageBean.getSenderBean();
-        holder.tvName.setText(sender.getUserName());
-        holder.tvDesc.setText(messageBean.getContent());
-        String avatar = sender.getAvatar();
-        GlideUtil.loadRoundedCorner(mContext,avatar, holder.ivHead, R.mipmap.icon_default_small_head);
-        holder.ivHead.setOnClickListener(view -> {
-            if (!TextUtils.isEmpty(avatar)) {
-                //CustomBitmapActivity.navigateToCustomBitmapActivity(mContext, avatar, true);
-                Log.i(TAG,"click head.");
-            } else {
-                Toast.makeText(mContext,R.string.error_msg,Toast.LENGTH_SHORT).show();
-            }
-        });
+        if(TextUtils.isEmpty(messageBean.getContent())){
+            holder.tvDesc.setVisibility(View.GONE);
+        } else {
+            holder.tvDesc.setVisibility(View.VISIBLE);
+            holder.tvDesc.setText(messageBean.getContent());
+        }
 
-        if(imageUrlBeanList.size() == 0){
+        SenderBean sender = messageBean.getSenderBean();
+        if(sender != null){
+            holder.tvName.setText(sender.getUserName());
+            GlideUtil.loadRoundedCorner(mContext,sender.getAvatar(), holder.ivHead, R.mipmap.ic_launcher);
+            holder.ivHead.setOnClickListener(view -> {
+                if (!TextUtils.isEmpty(sender.getAvatar())) {
+                    //CustomBitmapActivity.navigateToCustomBitmapActivity(mContext, avatar, true);
+                    Log.i(TAG,"click head.");
+                } else {
+                    Toast.makeText(mContext,R.string.error_msg,Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+
+        if(imageUrlBeanList == null || imageUrlBeanList.size() == 0){
             holder.mImageShowLayout.setVisibility(View.GONE);
         } else {
             holder.mImageShowLayout.setVisibility(View.VISIBLE);
-            holder.mImageShowLayout.setAdapter(new AbstractImageShowAdapter() {
-                @Override
-                protected int getItemCount() {
-                    return imageUrlBeanList == null ? 0 : imageUrlBeanList.size();
-                }
-
-                @Override
-                protected View createView(LayoutInflater inflater, ViewGroup parent, int position) {
-                    return inflater.inflate(R.layout.item_image_layout, parent, false);
-                }
-
-                @Override
-                protected void bindView(View view, int position) {
-                    final ImageView imageView = view.findViewById(R.id.iv_img);
-                    Glide.with(mContext).load(imageUrlBeanList.get(position)).into(imageView);
-                    if (imageUrlBeanList.size() == 1) {
-                        Glide.with(mContext)
-                                .asBitmap()
-                                .load(imageUrlBeanList.get(0))
-                                .into(new SimpleTarget<Bitmap>() {
-                                    @Override
-                                    public void onResourceReady(Bitmap bitmap, Transition<? super Bitmap> transition) {
-                                        final int width = bitmap.getWidth();
-                                        final int height = bitmap.getHeight();
-                                        holder.mImageShowLayout.setSingleImage(width, height,imageView);
-                                    }
-                                });
-                        Glide.with(mContext).load(imageUrlBeanList.get(0)).into(imageView);
-                    } else {
-                        Glide.with(mContext).load(imageUrlBeanList.get(position)).into(imageView);
-                    }
-                }
-            });
+            List<ImageUrlBean> urlBeanList = messageBean.getImageUrlBeanList();
+            ArrayList<String> strUrlList = new ArrayList<>();
+            for (ImageUrlBean urlBean : urlBeanList) {
+                strUrlList.add(urlBean.getImageUrl());
+            }
+            holder.mImageShowLayout.setData(strUrlList);
         }
 
         if(commentBeanList == null || commentBeanList.size() == 0){
@@ -138,6 +114,8 @@ public class MessageListAdapter extends RecyclerView.Adapter{
             holder.mCommentLayout.setCommentBeanList(commentBeanList);
             holder.mCommentLayout.showCommit();
         }
+
+        holder.tvTime.setText("2020-10-20 16:40");
     }
 
     @Override
@@ -178,8 +156,8 @@ public class MessageListAdapter extends RecyclerView.Adapter{
         TextView tvName;
         @BindView(R.id.tv_desc)
         TextView tvDesc;
-        @BindView(R.id.img_show_layout)
-        ImageShowLayout mImageShowLayout;
+        @BindView(R.id.npl_item_moment_photos)
+        BGANinePhotoLayout mImageShowLayout;
         @BindView(R.id.view_line)
         View viewLine;
         @BindView(R.id.rl_comment)
@@ -202,5 +180,4 @@ public class MessageListAdapter extends RecyclerView.Adapter{
             mLoadTextView = itemView.findViewById(R.id.we_media_loading);
         }
     }
-
 }

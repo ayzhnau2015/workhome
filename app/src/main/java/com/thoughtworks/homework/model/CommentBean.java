@@ -29,4 +29,12 @@ public class CommentBean {
     public void setSenderBean(SenderBean senderBean) {
         mSenderBean = senderBean;
     }
+
+    @Override
+    public String toString() {
+        return "CommentBean{" +
+                "mContent='" + mContent + '\'' +
+                ", mSenderBean=" + mSenderBean +
+                '}';
+    }
 }

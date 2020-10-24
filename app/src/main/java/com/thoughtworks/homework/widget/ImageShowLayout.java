@@ -105,8 +105,8 @@ public class ImageShowLayout extends ViewGroup {
         if(itemCount == 4){
             mRowCount = mColumnCount = 2;
         }
-
         removeAllViews();
+
         for (int index = 0; index < itemCount; index++) {
             final View view = adapter.createView(LayoutInflater.from(getContext()), this, index);
             adapter.bindView(view, index);

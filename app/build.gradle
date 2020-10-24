@@ -89,5 +89,7 @@ dependencies {
 
     //swiperefreshlayout
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:$swipe_refresh_layout_version"
-    implementation "com.squareup.picasso:picasso:2.5.2"
+    implementation 'cn.bingoogolapple:bga-photopicker:2.0.2@aar'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'cn.bingoogolapple:bga-baseadapter:2.0.0@aar'
 }
