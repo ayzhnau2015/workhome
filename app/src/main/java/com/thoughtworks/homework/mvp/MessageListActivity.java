@@ -1,7 +1,5 @@
 package com.thoughtworks.homework.mvp;
 
-import android.content.Context;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -12,18 +10,19 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.material.appbar.AppBarLayout;
 import com.thoughtworks.homework.R;
 import com.thoughtworks.homework.model.MessageBean;
 import com.thoughtworks.homework.model.UserBean;
-import com.thoughtworks.homework.util.GlideUtil;
+import com.thoughtworks.homework.util.ImageUtil;
 import com.thoughtworks.homework.util.MessageConstants;
-import com.thoughtworks.homework.util.StatusBarUtil;
+import com.thoughtworks.homework.util.StatusToolUtil;
 import com.thoughtworks.homework.widget.StatusView;
+import com.thoughtworks.homework.widget.swipe.SwipeRefreshLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -85,20 +84,19 @@ public class MessageListActivity extends AppCompatActivity implements MessageLis
         layoutManager.setOrientation(RecyclerView.VERTICAL);
         mRecyclerView.setOverScrollMode(View.OVER_SCROLL_NEVER);
         mRecyclerView.setLayoutManager(layoutManager);
-        mRlTitleView.setOnClickListener(v -> mRecyclerView.scrollToPosition(0));
+        mRlTitleView.setOnClickListener(v -> mRecyclerView.smoothScrollToPosition(0));
+        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
         mSwipeRefreshLayout.setOnRefreshListener(()-> mPresenter.loadMore());
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
-                try {
-                    if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                        mMessageListAdapter.setFootView(MessageConstants.LOADING);
-                        mPresenter.loadMore();
-                    }
-                } catch (Exception e) {
-                    Log.i(TAG,"load more error!.");
+                boolean isStateIdle = newState == RecyclerView.SCROLL_STATE_IDLE;
+                int lastCompletelyVisibleItemPosition = layoutManager.findLastCompletelyVisibleItemPosition();
+                if((lastCompletelyVisibleItemPosition == layoutManager.getItemCount() - 1) && isStateIdle) {
+                    showLoading(MessageConstants.LOADING);
+                    mPresenter.loadMore();
                 }
             }
 
@@ -114,37 +112,33 @@ public class MessageListActivity extends AppCompatActivity implements MessageLis
                 //将标题栏的颜色设置为完全不透明状态
                 mRlTitleView.setAlpha(0f);
                 mStatusView.setAlpha(0f);
-                StatusBarUtil.setImmersiveStatusBar(MessageListActivity.this, false);
+                StatusToolUtil.setImmersiveStatusBar(MessageListActivity.this, false);
             } else {
                 if (!mSwipeRefreshLayout.isRefreshing()) {
                     mSwipeRefreshLayout.setEnabled(false);
                 }
                 int abs = Math.abs(verticalOffset);
-                if (abs <= mAppBarLayoutHeight - (mTitleViewHeight + getStatusBarHeight(MessageListActivity.this))) {
+                if (abs <= mAppBarLayoutHeight - (mTitleViewHeight + StatusToolUtil.getStatusBarHeight(MessageListActivity.this))) {
                     float alpha = (float) abs / mAppBarLayoutHeight;
                     mRlTitleView.setAlpha(alpha);
                     mStatusView.setAlpha(alpha);
-                    StatusBarUtil.setImmersiveStatusBar(MessageListActivity.this, false);
+                    StatusToolUtil.setImmersiveStatusBar(MessageListActivity.this, false);
                 } else {
                     mRlTitleView.setAlpha(1.0f);
                     mStatusView.setAlpha(1.0f);
-                    StatusBarUtil.setImmersiveStatusBar(MessageListActivity.this, true, ContextCompat.getColor(MessageListActivity.this, R.color.home_status_bar_color));
+                    StatusToolUtil.setImmersiveStatusBar(MessageListActivity.this, true,
+                            ContextCompat.getColor(MessageListActivity.this, R.color.home_status_bar_color));
                 }
             }
         });
 
     }
 
-    public static int getStatusBarHeight(Context context) {
-        Resources resources = context.getResources();
-        return resources.getDimensionPixelSize(resources.getIdentifier("status_bar_height", "dimen", "android"));
-    }
-
     @Override
     public void showUserInfo(UserBean userInfoBean) {
         mTvSelfName.setText(userInfoBean.getUserName());
-        GlideUtil.load(this, userInfoBean.getProfileImage(), mIvSelfBg, R.mipmap.default_place_img);
-        GlideUtil.load(this, userInfoBean.getAvatar(), mIvSelfHead, R.mipmap.icon_default_small_head);
+        ImageUtil.load(this, userInfoBean.getProfileImage(), mIvSelfBg, R.mipmap.default_place_img);
+        ImageUtil.load(this, userInfoBean.getAvatar(), mIvSelfHead, R.mipmap.icon_default_small_head);
     }
 
     @Override
@@ -156,27 +150,15 @@ public class MessageListActivity extends AppCompatActivity implements MessageLis
         int oldSize = mMessageBeans.size();
         Log.w(TAG,"show allmessage " + messageBeans);
         mMessageBeans.addAll(messageBeans);
-        mRecyclerView.setAdapter(mMessageListAdapter);
         mMessageListAdapter.notifyItemRangeInserted(oldSize,messageBeans.size());
-    }
-
-    @Override
-    public void showAllCommit() {
-
-    }
-
-    @Override
-    public void hideCommit(int position) {
-
-    }
-
-    @Override
-    public void loadMoreMessage(int startPosition) {
-
     }
 
     @Override
     public void showLoading(int state) {
         mMessageListAdapter.setFootView(state);
+        if(state == MessageConstants.LOADING_NO_MORE
+                || state == MessageConstants.LOADING_COMPLETE){
+            mSwipeRefreshLayout.setRefreshing(false);
+        }
     }
 }

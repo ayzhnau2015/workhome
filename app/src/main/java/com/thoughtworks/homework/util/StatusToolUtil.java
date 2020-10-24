@@ -17,13 +17,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
-/**
- * Desc StatusBarUtil
- *
- * @author zhangxiaolin
- * Date 2020/9/16
- */
-public class StatusBarUtil {
+public class StatusToolUtil {
     public final static int TYPE_MIUI = 0;
     public final static int TYPE_FLYME = 1;
     public final static int TYPE_M = 3;//6.0
@@ -187,26 +181,7 @@ public class StatusBarUtil {
      */
     public static int getStatusBarHeight(Context context) {
         Resources resources = context.getResources();
-        return resources.getDimensionPixelSize(resources.getIdentifier("status_bar_height", "dimen", "android"));
+        return resources.getDimensionPixelSize(
+                resources.getIdentifier("status_bar_height", "dimen", "android"));
     }
-
-    /**
-     * 隐藏虚拟按键，并且全屏
-     */
-    public static void hideNavigationBar(Activity activity) {
-        try {
-            if (Build.VERSION.SDK_INT > 16 && Build.VERSION.SDK_INT < 19) {
-                View v = activity.getWindow().getDecorView();
-                v.setSystemUiVisibility(View.GONE);
-            } else if (Build.VERSION.SDK_INT >= 19) {
-                View decorView = activity.getWindow().getDecorView();
-                int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY | View.SYSTEM_UI_FLAG_FULLSCREEN;
-                decorView.setSystemUiVisibility(uiOptions);
-            }
-        } catch (Exception e) {
-        }
-    }
-
-
 }

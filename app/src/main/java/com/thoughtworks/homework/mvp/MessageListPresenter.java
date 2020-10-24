@@ -20,8 +20,8 @@ import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
 
 public class MessageListPresenter implements MessageListContract.MessagePresenter {
-    private static final int MAX_PAGE_SIZE = 5;
     private static final String TAG = "MessageListPresenter";
+    private static final int MAX_PAGE_SIZE = 5;
     private GetUserUseCase mUserUseCase;
     private GetMessageListUseCase mMessageListUseCase;
 
@@ -29,12 +29,12 @@ public class MessageListPresenter implements MessageListContract.MessagePresente
     private List<MessageBean> mAllMessage;
     private int mTotalPage;
     private int mPage;
-    public MessageListPresenter(MessageListContract.MessageView view){
+    public MessageListPresenter(MessageListContract.MessageView view) {
         ThreadExecutorImp executorImp = new ThreadExecutorImp();
         UIThreadImp uiThreadImp = new UIThreadImp();
         DataSource dataSource = new MovementDataSource();
-        mUserUseCase = new GetUserUseCase(executorImp,uiThreadImp,dataSource);
-        mMessageListUseCase = new GetMessageListUseCase(executorImp,uiThreadImp,dataSource);
+        mUserUseCase = new GetUserUseCase(executorImp, uiThreadImp, dataSource);
+        mMessageListUseCase = new GetMessageListUseCase(executorImp, uiThreadImp, dataSource);
         mView = view;
     }
     @Override
@@ -114,9 +114,14 @@ public class MessageListPresenter implements MessageListContract.MessagePresente
         }
         if(mPage < mTotalPage){
             mPage++;
+            int start = (mPage - 1) * MAX_PAGE_SIZE;
             int end = mPage * MAX_PAGE_SIZE;
-            int start = end - MAX_PAGE_SIZE;
-
+            if(start >= mAllMessage.size()){
+                mView.showLoading(MessageConstants.LOADING_NO_MORE);
+                return ;
+            } else if(end >= mAllMessage.size()){
+                end = mAllMessage.size() - 1;
+            }
             mView.showAllMessage(mAllMessage.subList(start, end));
         } else {
             mView.showLoading(MessageConstants.LOADING_NO_MORE);

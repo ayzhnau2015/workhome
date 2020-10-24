@@ -56,13 +56,13 @@ public class LinearCommentLayout extends LinearLayout {
 
     private View getView(int index) {
         CommentBean commentBean = mCommentBeanList.get(index);
-        TextView textView = getTextView();
         SpannableStringBuilder builder = new SpannableStringBuilder();
         SenderBean comUser = commentBean.getSenderBean();
         String name = comUser.getUserName();
         builder.append(setClickableSpan(name));
         builder.append(" : ");
         builder.append(setClickableSpanContent(commentBean.getContent(), index));
+        TextView textView = getTextView();
         textView.setText(builder);
         return textView;
     }

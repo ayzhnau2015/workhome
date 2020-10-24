@@ -18,7 +18,6 @@ import com.thoughtworks.homework.R;
  * @since 2020-10-20
  */
 public class ImageShowLayout extends ViewGroup {
-    private static final int MAX_SIZE = 9;                   // 最大显示的图片数
     private int mSingleImageWidth = 250;              // 单张图片时的最大大小,单位dp
     private float mSingleImageRatio = 0.7f;          // 单张图片的宽高比(宽/高)
     private int mImgMargin = 3;                    // 宫格间距，单位dp
@@ -56,7 +55,7 @@ public class ImageShowLayout extends ViewGroup {
         int height = 0;
         int totalWidth = width - getPaddingLeft() - getPaddingRight();
         if(imgCount == 1){
-            mGridWidth = mSingleImageWidth > totalWidth ? totalWidth : mSingleImageWidth;
+            mGridWidth = Math.min(mSingleImageWidth,totalWidth);
             mGridHeight = (int) (mGridWidth / mSingleImageRatio);
             if (mGridHeight > mSingleImageWidth) {
                 float ratio = mSingleImageWidth * 1.0f / mGridHeight;

@@ -17,12 +17,6 @@ public interface MessageListContract {
 
         void showAllMessage(List<MessageBean> messageBeans);
 
-        void showAllCommit();
-
-        void hideCommit(int position);
-
-        void loadMoreMessage(int startPosition);
-
         void showLoading(int state);
     }
 }

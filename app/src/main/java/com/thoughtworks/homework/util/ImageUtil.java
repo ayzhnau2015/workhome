@@ -11,9 +11,9 @@ import com.bumptech.glide.request.RequestOptions;
 /**
  *
  * @author zhuyaan
- * Date 2020-10-20
+ * @since  2020-10-20
  */
-public class GlideUtil {
+public class ImageUtil {
     /**
      * 加载圆角图片
      *

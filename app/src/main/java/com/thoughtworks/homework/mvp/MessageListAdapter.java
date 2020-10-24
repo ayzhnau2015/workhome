@@ -19,8 +19,9 @@ import com.thoughtworks.homework.model.CommentBean;
 import com.thoughtworks.homework.model.ImageUrlBean;
 import com.thoughtworks.homework.model.MessageBean;
 import com.thoughtworks.homework.model.SenderBean;
-import com.thoughtworks.homework.util.GlideUtil;
+import com.thoughtworks.homework.util.ImageUtil;
 import com.thoughtworks.homework.util.MessageConstants;
+import com.thoughtworks.homework.util.TimeUtil;
 import com.thoughtworks.homework.widget.LinearCommentLayout;
 
 import java.util.ArrayList;
@@ -74,20 +75,20 @@ public class MessageListAdapter extends RecyclerView.Adapter{
         }
         List<ImageUrlBean> imageUrlBeanList = messageBean.getImageUrlBeanList();
         List<CommentBean> commentBeanList = messageBean.getCommentBeanList();
+        // 设置内容
         if(TextUtils.isEmpty(messageBean.getContent())){
-            holder.tvDesc.setVisibility(View.GONE);
+            holder.tvContent.setVisibility(View.GONE);
         } else {
-            holder.tvDesc.setVisibility(View.VISIBLE);
-            holder.tvDesc.setText(messageBean.getContent());
+            holder.tvContent.setVisibility(View.VISIBLE);
+            holder.tvContent.setText(messageBean.getContent());
         }
 
         SenderBean sender = messageBean.getSenderBean();
         if(sender != null){
             holder.tvName.setText(sender.getUserName());
-            GlideUtil.loadRoundedCorner(mContext,sender.getAvatar(), holder.ivHead, R.mipmap.ic_launcher);
+            ImageUtil.loadRoundedCorner(mContext,sender.getAvatar(), holder.ivHead, R.mipmap.ic_launcher);
             holder.ivHead.setOnClickListener(view -> {
                 if (!TextUtils.isEmpty(sender.getAvatar())) {
-                    //CustomBitmapActivity.navigateToCustomBitmapActivity(mContext, avatar, true);
                     Log.i(TAG,"click head.");
                 } else {
                     Toast.makeText(mContext,R.string.error_msg,Toast.LENGTH_SHORT).show();
@@ -95,27 +96,29 @@ public class MessageListAdapter extends RecyclerView.Adapter{
             });
         }
 
+        //设置图片列表
         if(imageUrlBeanList == null || imageUrlBeanList.size() == 0){
-            holder.mImageShowLayout.setVisibility(View.GONE);
+            holder.layoutPhotos.setVisibility(View.GONE);
         } else {
-            holder.mImageShowLayout.setVisibility(View.VISIBLE);
+            holder.layoutPhotos.setVisibility(View.VISIBLE);
             List<ImageUrlBean> urlBeanList = messageBean.getImageUrlBeanList();
             ArrayList<String> strUrlList = new ArrayList<>();
             for (ImageUrlBean urlBean : urlBeanList) {
                 strUrlList.add(urlBean.getImageUrl());
             }
-            holder.mImageShowLayout.setData(strUrlList);
+            holder.layoutPhotos.setData(strUrlList);
         }
 
+        //设置评论
         if(commentBeanList == null || commentBeanList.size() == 0){
-            holder.mCommentLayout.setVisibility(View.GONE);
+            holder.layoutComment.setVisibility(View.GONE);
         } else {
-            holder.mCommentLayout.setVisibility(View.VISIBLE);
-            holder.mCommentLayout.setCommentBeanList(commentBeanList);
-            holder.mCommentLayout.showCommit();
+            holder.layoutComment.setVisibility(View.VISIBLE);
+            holder.layoutComment.setCommentBeanList(commentBeanList);
+            holder.layoutComment.showCommit();
         }
 
-        holder.tvTime.setText("2020-10-20 16:40");
+        holder.tvTime.setText(TimeUtil.getCurrentTime());
     }
 
     @Override
@@ -149,21 +152,21 @@ public class MessageListAdapter extends RecyclerView.Adapter{
     }
 
     static class MessageHolder extends RecyclerView.ViewHolder {
-
         @BindView(R.id.iv_head)
         ImageView ivHead;
+
         @BindView(R.id.tv_name)
         TextView tvName;
-        @BindView(R.id.tv_desc)
-        TextView tvDesc;
-        @BindView(R.id.npl_item_moment_photos)
-        BGANinePhotoLayout mImageShowLayout;
-        @BindView(R.id.view_line)
-        View viewLine;
-        @BindView(R.id.rl_comment)
-        View commentRoot;
-        @BindView(R.id.cv)
-        LinearCommentLayout mCommentLayout;
+
+        @BindView(R.id.tv_content)
+        TextView tvContent;
+
+        @BindView(R.id.layout_photos)
+        BGANinePhotoLayout layoutPhotos;
+
+        @BindView(R.id.layout_comment)
+        LinearCommentLayout layoutComment;
+
         @BindView(R.id.tv_time)
         TextView tvTime;
 

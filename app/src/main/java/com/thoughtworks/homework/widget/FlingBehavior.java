@@ -13,19 +13,11 @@ import com.google.android.material.appbar.AppBarLayout;
 
 import java.lang.reflect.Field;
 
-/**
- * Desc 自定义AppBarLayout的Behavior
- *
- * 解决CoordinatorLayout滑动抖动问题
- *
- * @author zhangxiaolin
- * Date 2020/8/5
- */
 public class FlingBehavior extends AppBarLayout.Behavior {
     private static final String TAG = "AppbarLayoutBehavior";
     private static final int TYPE_FLING = 1;
-    private boolean isFlinging;
-    private boolean shouldBlockNestedScroll;
+    private boolean mIsFlinging;
+    private boolean mShouldBlockNestedScroll;
 
     public FlingBehavior(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -34,7 +26,7 @@ public class FlingBehavior extends AppBarLayout.Behavior {
     @Override
     public boolean onInterceptTouchEvent(CoordinatorLayout parent, AppBarLayout child, MotionEvent ev) {
         LogUtil.d(TAG, "onInterceptTouchEvent:" + child.getTotalScrollRange());
-        shouldBlockNestedScroll = isFlinging;
+        mShouldBlockNestedScroll = mIsFlinging;
         switch (ev.getActionMasked()) {
             case MotionEvent.ACTION_DOWN:
                 //手指触摸屏幕的时候停止fling事件
@@ -127,7 +119,6 @@ public class FlingBehavior extends AppBarLayout.Behavior {
             }
             OverScroller overScroller = (OverScroller) scrollerField.get(this);
             if (flingRunnable != null) {
-                LogUtil.d(TAG, "存在flingRunnable");
                 appBarLayout.removeCallbacks(flingRunnable);
                 flingRunnableField.set(this, null);
             }
@@ -162,9 +153,9 @@ public class FlingBehavior extends AppBarLayout.Behavior {
         //子类还未结束其自身的fling
         //所以这里监听子类的非touch时的滑动，然后block掉滑动事件传递给AppBarLayout
         if (type == TYPE_FLING) {
-            isFlinging = true;
+            mIsFlinging = true;
         }
-        if (!shouldBlockNestedScroll) {
+        if (!mShouldBlockNestedScroll) {
             super.onNestedPreScroll(coordinatorLayout, child, target, dx, dy, consumed, type);
         }
     }
@@ -176,7 +167,7 @@ public class FlingBehavior extends AppBarLayout.Behavior {
         LogUtil.d(TAG, "onNestedScroll: target:" + target.getClass() + " ,"
                 + child.getTotalScrollRange() + " ,dxConsumed:"
                 + dxConsumed + " ,dyConsumed:" + dyConsumed + " " + ",type:" + type);
-        if (!shouldBlockNestedScroll) {
+        if (!mShouldBlockNestedScroll) {
             super.onNestedScroll(coordinatorLayout, child, target, dxConsumed,
                     dyConsumed, dxUnconsumed, dyUnconsumed, type);
         }
@@ -187,8 +178,8 @@ public class FlingBehavior extends AppBarLayout.Behavior {
                                    View target, int type) {
         LogUtil.d(TAG, "onStopNestedScroll");
         super.onStopNestedScroll(coordinatorLayout, abl, target, type);
-        isFlinging = false;
-        shouldBlockNestedScroll = false;
+        mIsFlinging = false;
+        mShouldBlockNestedScroll = false;
     }
 
     private static class LogUtil{

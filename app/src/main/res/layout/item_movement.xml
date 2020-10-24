@@ -30,7 +30,7 @@
         />
 
     <TextView
-        android:id="@+id/tv_desc"
+        android:id="@+id/tv_content"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
@@ -44,7 +44,7 @@
         />
 
     <cn.bingoogolapple.photopicker.widget.BGANinePhotoLayout
-        android:id="@+id/npl_item_moment_photos"
+        android:id="@+id/layout_photos"
         style="@style/MatchWrap"
         android:layout_marginTop="5dp"
         app:bga_npl_itemCornerRadius="0dp"
@@ -56,7 +56,7 @@
         app:bga_npl_showAsLargeWhenOnlyOne="true"
         android:layout_marginStart="5dp"
         android:layout_marginEnd="20dp"
-        android:layout_below="@id/tv_desc"
+        android:layout_below="@id/tv_content"
         android:layout_toRightOf="@id/iv_head"
         />
 
@@ -69,7 +69,7 @@
         android:textColor="@color/home_status_bar_color"
         android:textSize="12sp"
         android:text="dddddd"
-        android:layout_below="@id/npl_item_moment_photos"
+        android:layout_below="@id/layout_photos"
         android:layout_toRightOf="@id/iv_head"/>
 
     <FrameLayout
@@ -83,7 +83,7 @@
         android:layout_toRightOf="@id/iv_head">
 
         <com.thoughtworks.homework.widget.LinearCommentLayout
-            android:id="@+id/cv"
+            android:id="@+id/layout_comment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
