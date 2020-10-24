@@ -3,5 +3,5 @@
     <string name="error_msg">avator resource is not exist.</string>
     <string name="load_more">Loading</string>
     <string name="no_more">No more message.</string>
-    <string name="title_app">Friend Status</string>
+    <string name="title_app">WeChat Moments</string>
 </resources>
