@@ -86,7 +86,7 @@ public class MessageListAdapter extends RecyclerView.Adapter{
         SenderBean sender = messageBean.getSenderBean();
         if(sender != null){
             holder.tvName.setText(sender.getUserName());
-            ImageUtil.loadRoundedCorner(mContext,sender.getAvatar(), holder.ivHead, R.mipmap.ic_launcher);
+            ImageUtil.loadRoundedCorner(mContext,sender.getAvatar().trim(), holder.ivHead, R.mipmap.ic_launcher);
             holder.ivHead.setOnClickListener(view -> {
                 if (!TextUtils.isEmpty(sender.getAvatar())) {
                     Log.i(TAG,"click head.");
@@ -104,7 +104,7 @@ public class MessageListAdapter extends RecyclerView.Adapter{
             List<ImageUrlBean> urlBeanList = messageBean.getImageUrlBeanList();
             ArrayList<String> strUrlList = new ArrayList<>();
             for (ImageUrlBean urlBean : urlBeanList) {
-                strUrlList.add(urlBean.getImageUrl());
+                strUrlList.add(urlBean.getImageUrl().trim());
             }
             holder.layoutPhotos.setData(strUrlList);
         }
@@ -133,7 +133,7 @@ public class MessageListAdapter extends RecyclerView.Adapter{
 
     @Override
     public int getItemCount() {
-        return mMessageBeans == null ? 0 : mMessageBeans.size();
+        return mMessageBeans == null ? 0 : mMessageBeans.size() + 1;
     }
 
     public void setFootView(int loadingState) {

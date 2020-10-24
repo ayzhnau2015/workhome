@@ -18,5 +18,7 @@ public interface MessageListContract {
         void showAllMessage(List<MessageBean> messageBeans);
 
         void showLoading(int state);
+
+        void goToFirstItem();
     }
 }

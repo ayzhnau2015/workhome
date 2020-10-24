@@ -1,6 +1,7 @@
 package com.thoughtworks.homework.util;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
@@ -23,10 +24,17 @@ public class ImageUtil {
      * @param placeId   缺省图
      */
     public static void loadRoundedCorner(Context context, String imageUrl, ImageView imageView, int placeId) {
+        if(TextUtils.isEmpty(imageUrl)){
+            return ;
+        }
+        String newUrl = imageUrl;
+        if(imageUrl.startsWith("http://")){
+            newUrl = imageUrl.replace("http://","https://");
+        }
         //设置图片圆角角度
         //通过RequestOptions扩展功能,override:采样率,因为ImageView就这么大,可以压缩图片,降低内存消耗
         RequestOptions options = RequestOptions.bitmapTransform(new RoundedCorners(35)).placeholder(placeId).error(placeId);
-        Glide.with(context).load(imageUrl).apply(options.diskCacheStrategy(DiskCacheStrategy.ALL)).into(imageView);
+        Glide.with(context).load(newUrl).apply(options.diskCacheStrategy(DiskCacheStrategy.ALL)).into(imageView);
     }
 
     /**
@@ -38,7 +46,14 @@ public class ImageUtil {
      * @param placeId   缺省图
      */
     public static void load(Context context, String imageUrl, ImageView imageView, int placeId) {
-        Glide.with(context).load(imageUrl).apply(getPlaceErrorCenter(placeId).diskCacheStrategy(DiskCacheStrategy.ALL)).into(imageView);
+        if(TextUtils.isEmpty(imageUrl)){
+            return ;
+        }
+        String newUrl = imageUrl;
+        if(imageUrl.startsWith("http://")){
+            newUrl = imageUrl.replace("http://","https://");
+        }
+        Glide.with(context).load(newUrl).apply(getPlaceErrorCenter(placeId).diskCacheStrategy(DiskCacheStrategy.ALL)).into(imageView);
     }
 
     private static RequestOptions getPlaceErrorCenter(int errorResId) {

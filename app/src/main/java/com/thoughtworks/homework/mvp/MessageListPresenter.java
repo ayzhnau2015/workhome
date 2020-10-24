@@ -72,13 +72,14 @@ public class MessageListPresenter implements MessageListContract.MessagePresente
             public void onNext(@NonNull List<MessageBean> messageBeans) {
                 Log.e(TAG,"obtain user onNext.");
                 mAllMessage = deleteIllegal(messageBeans);
-                int other = mAllMessage.size() % MAX_PAGE_SIZE;
+                int other = (mAllMessage.size())% MAX_PAGE_SIZE;
                 if(other != 0){
-                    mTotalPage = mAllMessage.size() / MAX_PAGE_SIZE + 1;
+                    mTotalPage = (mAllMessage.size()) / MAX_PAGE_SIZE + 1;
                 } else {
-                    mTotalPage = mAllMessage.size() / MAX_PAGE_SIZE;
+                    mTotalPage = (mAllMessage.size()) / MAX_PAGE_SIZE;
                 }
-                mView.showAllMessage(mAllMessage.subList(0,MAX_PAGE_SIZE));
+                loadMore();
+                mView.goToFirstItem();
             }
 
             @Override
@@ -120,7 +121,7 @@ public class MessageListPresenter implements MessageListContract.MessagePresente
                 mView.showLoading(MessageConstants.LOADING_NO_MORE);
                 return ;
             } else if(end >= mAllMessage.size()){
-                end = mAllMessage.size() - 1;
+                end = mAllMessage.size();
             }
             mView.showAllMessage(mAllMessage.subList(start, end));
         } else {

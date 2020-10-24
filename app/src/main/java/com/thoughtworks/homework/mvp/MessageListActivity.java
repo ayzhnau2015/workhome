@@ -161,4 +161,9 @@ public class MessageListActivity extends AppCompatActivity implements MessageLis
             mSwipeRefreshLayout.setRefreshing(false);
         }
     }
+
+    @Override
+    public void goToFirstItem() {
+        mRecyclerView.smoothScrollToPosition(0);
+    }
 }
